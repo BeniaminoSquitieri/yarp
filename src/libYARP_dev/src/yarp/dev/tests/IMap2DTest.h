@@ -65,6 +65,8 @@ namespace yarp::dev::tests
                 b = imap->getLocation("loc_test2", l2t); CHECK(b);
                 b = imap->getArea("area_test1", a1); CHECK(b);
                 b = imap->getPath("path_test1", p1); CHECK(b);
+                
+                b= imap->getObjectsList(ll); CHECK(b); CHECK(ll.size() == 10);
             }
         }
     }

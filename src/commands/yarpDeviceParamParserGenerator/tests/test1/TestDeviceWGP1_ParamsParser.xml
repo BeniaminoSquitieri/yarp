@@ -1,0 +1,79 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!DOCTYPE robot PUBLIC "-//YARP//DTD yarprobotinterface 3.0//EN" "http://www.yarp.it/DTD/yarprobotinterfaceV3.0.dtd">
+<robot name = "robot1" build = "1" xmlns:xi = "http://www.w3.org/2001/XInclude">
+<devices>
+    <device xmlns:xi = "http://www.w3.org/2001/XInclude" name = "device_example" type = "testDeviceWGP1">
+        <param name="param_vec9"> mandatory_value </param>
+        <param name="param_vec8"> mandatory_value </param>
+        <param name="param_vec7"> mandatory_value </param>
+        <param name="param_vec6"> ("sa1" "sa2" "sa3") </param>
+        <param name="param_vec5"> (1.0 2.0 3.0) </param>
+        <param name="param_vec4"> (1 2 3) </param>
+        <param name="param_vec3"> optional_value </param>
+        <param name="param_vec2"> optional_value </param>
+        <param name="param_vec1"> optional_value </param>
+        <param name="param_7"> mandatory_value </param>
+        <param name="param_6"> mandatory_value </param>
+        <param name="param_5"> mandatory_value </param>
+        <param name="param_4"> mandatory_value </param>
+        <param name="param_3"> mandatory_value </param>
+        <param name="param_2"> mandatory_value </param>
+        <param name="param_1"> mandatory_value </param>
+
+        <group name="group1">
+            <param name="param_4"> mandatory_value </param>
+            <param name="param_3"> mandatory_value </param>
+            <param name="param_2"> mandatory_value </param>
+            <param name="param_1"> mandatory_value </param>
+        </group>
+
+        <group name="group2">
+            <param name="param_4"> 1000 </param>
+            <param name="param_3"> true </param>
+            <param name="param_2"> 1.0 </param>
+            <param name="param_1"> def1 </param>
+        </group>
+
+        <group name="group3">
+            <param name="param_4"> 1000 </param>
+            <param name="param_3"> true </param>
+            <param name="param_2"> 1.0 </param>
+            <param name="param_1"> def1 </param>
+        </group>
+
+        <group name="group4">
+
+            <group name="subgroup1">
+                <param name="param_4"> 3 </param>
+                <param name="param_3"> 2 </param>
+                <param name="param_2"> 1 </param>
+                <param name="param_1"> 0 </param>
+            </group>
+
+            <group name="subgroup2">
+                <param name="param_4"> 13 </param>
+                <param name="param_3"> 12 </param>
+                <param name="param_2"> 11 </param>
+                <param name="param_1"> 10 </param>
+            </group>
+
+            <group name="group5">
+
+                <group name="subgroup1">
+                    <param name="param_4"> 23 </param>
+                    <param name="param_3"> 22 </param>
+                    <param name="param_2"> 21 </param>
+                    <param name="param_1"> 20 </param>
+                </group>
+
+                <group name="subgroup2">
+                    <param name="param_4"> 33 </param>
+                    <param name="param_3"> 32 </param>
+                    <param name="param_2"> 31 </param>
+                    <param name="param_1"> 30 </param>
+                </group>
+            </group>
+        </group>
+    </device>
+</devices>
+</robot>

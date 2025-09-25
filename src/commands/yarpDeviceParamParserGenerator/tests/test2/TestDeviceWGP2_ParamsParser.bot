@@ -1,0 +1,6 @@
+((group: - )(name: param_vec4 )(type: vector<int> )(units: m )(defaultValue: (1 2 3) )(required: 0 )(description: Test param 39 )(notes: Note )(notes: Note ))
+((group: - )(name: param_vec5 )(type: vector<double> )(units: m )(defaultValue: (1.0 2.0 3.0) )(required: 0 )(description: Test param 40 )(notes: Note )(notes: Note ))
+((group: - )(name: param_vec6 )(type: vector<string> )(units: m )(defaultValue: ("sa1" "sa2" "sa3") )(required: 0 )(description: Test param 41 )(notes: Note )(notes: Note ))
+((group: - )(name: param_vec7 )(type: vector<int> )(units: m )(defaultValue: - )(required: 1 )(description: Test param 42 )(notes: Note )(notes: Note ))
+((group: - )(name: param_vec8 )(type: vector<double> )(units: m )(defaultValue: - )(required: 1 )(description: Test param 43 )(notes: Note )(notes: Note ))
+((group: - )(name: param_vec9 )(type: vector<string> )(units: m )(defaultValue: - )(required: 1 )(description: Test param 44 )(notes: Note )(notes: Note ))

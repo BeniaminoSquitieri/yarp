@@ -1,0 +1,14 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!DOCTYPE robot PUBLIC "-//YARP//DTD yarprobotinterface 3.0//EN" "http://www.yarp.it/DTD/yarprobotinterfaceV3.0.dtd">
+<robot name = "robot1" build = "1" xmlns:xi = "http://www.w3.org/2001/XInclude">
+<devices>
+    <device xmlns:xi = "http://www.w3.org/2001/XInclude" name = "device_example" type = "testDeviceWGP2">
+        <param name="param_vec9"> mandatory_value </param>
+        <param name="param_vec8"> mandatory_value </param>
+        <param name="param_vec7"> mandatory_value </param>
+        <param name="param_vec6"> ("sa1" "sa2" "sa3") </param>
+        <param name="param_vec5"> (1.0 2.0 3.0) </param>
+        <param name="param_vec4"> (1 2 3) </param>
+    </device>
+</devices>
+</robot>
