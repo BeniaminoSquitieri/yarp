@@ -1,0 +1,3 @@
+MapName: unit_manual_map
+YarpMapData: unit_manual_map_yarpflags.ppm
+RosMapData: unit_manual_map_grid.yaml

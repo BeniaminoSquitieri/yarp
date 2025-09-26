@@ -1,0 +1,3 @@
+MapName: persist_map2
+YarpMapData: persist_map2_yarpflags.ppm
+RosMapData: persist_map2_grid.yaml

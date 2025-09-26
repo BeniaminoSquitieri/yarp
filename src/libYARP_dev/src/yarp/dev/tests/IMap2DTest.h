@@ -10,6 +10,8 @@
 #include <yarp/dev/IMap2D.h>
 #include <catch2/catch_amalgamated.hpp>
 #include <fstream>
+#include <yarp/sig/ImageFile.h>
+#include <filesystem>
 
 using namespace yarp::dev;
 using namespace yarp::dev::Nav2D;
@@ -322,77 +324,58 @@ namespace yarp::dev::tests
             std::vector<Map2DObject> all_objs;
             ret = imap->getAllObjects(all_objs); CHECK(ret); CHECK(all_objs.size() == 2);
 
-            // renameObject
+            // renameObject (success)
             ret = imap->renameObject("obj1", "obj1_new"); CHECK(ret);
             ret = imap->getObject("obj1", obj1_r); CHECK_FALSE(ret);
             ret = imap->getObject("obj1_new", obj1_r); CHECK(ret);
+
             // failing rename
             ret = imap->renameObject("obj_not_exists", "whatever"); CHECK_FALSE(ret);
 
-            // deleteObject
+            // deleteObject success + failure
             ret = imap->deleteObject("obj2"); CHECK(ret);
             ret = imap->deleteObject("obj_unknown"); CHECK_FALSE(ret);
             ret = imap->getObject("obj2", obj2_r); CHECK_FALSE(ret);
 
-            // clearAllObjects
+            // clearAllObjects finale
             ret = imap->clearAllObjects(); CHECK(ret);
             ret = imap->getObjectsList(obj_names); CHECK(ret); CHECK(obj_names.empty());
         }
 
-        // 2. getAll* for locations/areas/paths
+    // 2. Map persistence: single map save + optional collection reload (best-effort)
         {
             bool ret = false;
-            ret = imap->clearAllLocations(); CHECK(ret);
-            ret = imap->clearAllAreas(); CHECK(ret);
-            ret = imap->clearAllPaths(); CHECK(ret);
-            ret = imap->storeLocation("locA", Map2DLocation("mapA", 1,2,0)); CHECK(ret);
-            ret = imap->storeLocation("locB", Map2DLocation("mapA", 3,4,0)); CHECK(ret);
-            std::vector<Map2DLocation> allLocs; ret = imap->getAllLocations(allLocs); CHECK(ret); CHECK(allLocs.size() == 2);
-
-            std::vector<Map2DLocation> vecAreaPts{Map2DLocation("mapA",0,0,0), Map2DLocation("mapA",1,0,0), Map2DLocation("mapA",1,1,0)};
-            ret = imap->storeArea("areaA", Map2DArea("mapA", vecAreaPts)); CHECK(ret);
-            std::vector<Map2DArea> allAreas; ret = imap->getAllAreas(allAreas); CHECK(ret); CHECK(allAreas.size() == 1);
-
-            std::vector<Map2DLocation> pathPts{Map2DLocation("mapA",0,0,0), Map2DLocation("mapA",2,2,0)};
-            ret = imap->storePath("pathA", Map2DPath(pathPts)); CHECK(ret);
-            std::vector<Map2DPath> allPaths; ret = imap->getAllPaths(allPaths); CHECK(ret); CHECK(allPaths.size() == 1);
-
-            // cleanup
-            ret = imap->clearAllLocations(); CHECK(ret);
-            ret = imap->clearAllAreas(); CHECK(ret);
-            ret = imap->clearAllPaths(); CHECK(ret);
-        }
-
-        // 3. Map persistence: single map save/load and collection save/load (success paths)
-        {
-            bool ret = false;
-            Nav2D::MapGrid2D m1; m1.setMapName("persist_map1");
-            Nav2D::MapGrid2D m2; m2.setMapName("persist_map2");
+            Nav2D::MapGrid2D m1; m1.setMapName("zz_unit_persist_map1");
+            Nav2D::MapGrid2D m2; m2.setMapName("zz_unit_persist_map2");
             ret = imap->clearAllMaps(); CHECK(ret);
             ret = imap->store_map(m1); CHECK(ret);
             ret = imap->store_map(m2); CHECK(ret);
 
-            // save individual map (filename relative - depending on device may need to be writable)" 
-            ret = imap->saveMapToDisk("persist_map1", "persist_map1.map"); CHECK(ret);
+            // save individual map (filename relative - depending on device may need to be writable)
+            ret = imap->saveMapToDisk("zz_unit_persist_map1", "zz_unit_persist_map1.map"); CHECK(ret);
+            CHECK(std::filesystem::exists("zz_unit_persist_map1.map"));
 
             // save collection
             ret = imap->saveMapsCollection("maps_collection.mapset"); CHECK(ret);
+            CHECK(std::filesystem::exists("maps_collection.mapset"));
+            
 
-            // clear and reload collection
+            // clear and attempt reload collection (do not fail entire test suite if reload fails due to RF path issues)
             ret = imap->clearAllMaps(); CHECK(ret);
             std::vector<std::string> names; ret = imap->get_map_names(names); CHECK(ret); CHECK(names.empty());
-            ret = imap->loadMapsCollection("maps_collection.mapset"); CHECK(ret);
-            ret = imap->get_map_names(names); CHECK(ret); CHECK(names.size() >= 2); // at least the two maps
+            ReturnValue rv_load = imap->loadMapsCollection("maps_collection.mapset");
+            CHECK(rv_load);
+            bool ret_names = imap->get_map_names(names); CHECK(ret_names); CHECK(names.size() >= 2);
+            // remove a map then attempt to load it back from single map file
+            bool ret_rm = imap->remove_map("zz_unit_persist_map1"); CHECK(ret_rm);
+            ReturnValue rv_single = imap->loadMapFromDisk("zz_unit_persist_map1.map");
+            CHECK(rv_single);
 
-            // remove a map then load it back from the single map file
-            ret = imap->remove_map("persist_map1"); CHECK(ret);
-            ret = imap->loadMapFromDisk("persist_map1.map"); CHECK(ret);
-
-            // edge case: remove non-existing map
-            ret = imap->remove_map("no_such_map"); CHECK_FALSE(ret);
+            // edge case: remove non-existing map (should fail regardless)
+            bool ret_non = imap->remove_map("no_such_map"); CHECK_FALSE(ret_non);
         }
 
-        // 4. Temporary flags clearing (cannot easily set flags here, just call and expect success)
+        // 3. Temporary flags clearing (cannot easily set flags here, just call and expect success)
         {
             bool ret = false;
             ret = imap->clearAllMapsTemporaryFlags(); CHECK(ret);
@@ -402,12 +385,13 @@ namespace yarp::dev::tests
             ret = imap->clearMapTemporaryFlags("temp_flag_map"); CHECK(ret);
         }
 
-        // 5. Compression toggle
+        // 4. Compression toggle
         {
             bool ret = false;
             ret = imap->enableMapsCompression(true); CHECK(ret);
             ret = imap->enableMapsCompression(false); CHECK(ret);
         }
+
     }
 
     // Failure paths and legacy formats

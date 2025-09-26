@@ -1,0 +1,3 @@
+MapName: zz_unit_persist_map1
+YarpMapData: zz_unit_persist_map1_yarpflags.ppm
+RosMapData: zz_unit_persist_map1_grid.yaml
